@@ -68,3 +68,7 @@ Lisy stands for 'List Insp Sync Ying'. It is a Windows desktop app, developed by
 - It can be a little fun to watch this. 
 - Thank you.
 - Thank you.
+
+## Acknowledgement
+
+The Go code of Lisy’s Ying part is based on https://jonegil.github.io/gui-with-gio/ .
