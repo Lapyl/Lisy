@@ -10,7 +10,7 @@ Lisy stands for 'List Insp Sync Ying'. It is a Windows desktop app, developed by
 ## Links
 
 - Project Submission on DevPost: https://devpost.com/software/lisy-windows-desktop-app-for-files-management
-- Project Video on YouTube: https://youtu.be/oRSAzVVCHJ0
+- Project Video on YouTube: https://youtu.be/4db3sfWrPSM
 - GitHub repository: https://github.com/Lapyl/Lisy
 - Hackathon Information on Devpost: https://digital-jam.devpost.com/
 
