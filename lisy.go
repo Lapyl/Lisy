@@ -26,25 +26,36 @@ import (
 	"gioui.org/unit"
 	"gioui.org/widget"
 	"gioui.org/widget/material"
-	"github.com/reujab/wallpaper"
+	"github.com/ajstarks/giocanvas"
 )
 
+var zcha chan string
 var zpri chan bool
+var zind int
 var zmsg string
 var zlrd string
 var zlrf string
 
 func main() {
 	go func() {
-		w := new(app.Window)
-		w.Option(app.Title("LISY"))
-		w.Option(app.Size(unit.Dp(400), unit.Dp(600)))
-		if err := render(w); err != nil {
+		fmt.Println("A")
+		w1 := new(app.Window)
+		w1.Option(app.Title("LISY"))
+		w1.Option(app.Size(unit.Dp(400), unit.Dp(600)))
+		if err := abc4(w1); err != nil {
 			log.Fatal(err)
 		}
 		os.Exit(0)
 	}()
-	zpri = make(chan bool)
+	zcha = make(chan string, 1)
+	zind = 0
+	go func() {
+		for {
+			time.Sleep(time.Second * 1)
+			zcha <- "Lisy"
+		}
+	}()
+	zpri = make(chan bool, 2)
 	go func() {
 		for {
 			time.Sleep(time.Second / 25)
@@ -54,7 +65,7 @@ func main() {
 	app.Main()
 }
 
-func flis(ztop string) {
+func abc1(ztop string) {
 	ztag := time.Now().Format("06-01-02_15-04")
 	zlrd = ""
 	zlrf = ""
@@ -84,7 +95,64 @@ func flis(ztop string) {
 	fmt.Println(zmsg)
 }
 
-func render(w *app.Window) error {
+func abc2(s string) (image.Image, error) {
+	i, err := os.Open(s)
+	if err != nil {
+		return nil, err
+	}
+	im, _, err := image.Decode(i)
+	if err != nil {
+		return nil, err
+	}
+	i.Close()
+	return im, nil
+}
+
+func abc3(w *app.Window, s string) error {
+	var zops op.Ops
+	material.NewTheme()
+	bgcolor := color.NRGBA{100, 100, 100, 255}
+	for {
+		switch e := w.Event().(type) {
+		case app.FrameEvent:
+			select {
+			case ztit := <-zcha:
+				w.Option(app.Title(ztit))
+				zind = zind + 1
+				if zind > 40 {
+					w.Close()
+					return nil
+				}
+				im, err := abc2(strings.Split(s, ",")[zind])
+				if err != nil {
+					return err
+				}
+				fmt.Println(zind)
+				gtx := app.NewContext(&zops, e)
+				layout.Flex{
+					Axis:    layout.Vertical,
+					Spacing: layout.SpaceStart,
+				}.Layout(
+					gtx,
+					layout.Rigid(func(gtx layout.Context) layout.Dimensions {
+						canvas := giocanvas.NewCanvas(float32(e.Size.X), float32(e.Size.Y), app.FrameEvent{})
+						canvas.Background(bgcolor)
+						canvas.Grid(0, 0, 100, 100, 0.1, 10, color.NRGBA{128, 128, 128, 255})
+						canvas.Img(im, 100, 0, 600, 400, 100)
+						e.Frame(canvas.Context.Ops)
+						return layout.Dimensions{Size: image.Point{Y: 100}}
+					},
+					),
+				)
+			}
+		case app.DestroyEvent:
+			w.Close()
+			return e.Err
+		}
+	}
+}
+
+func abc4(w *app.Window) error {
 	var zbt1 widget.Clickable
 	var zbt2 widget.Clickable
 	var zbt3 widget.Clickable
@@ -114,7 +182,7 @@ func render(w *app.Window) error {
 				fmt.Println("List")
 				zist := zibx.Text()
 				zist = strings.TrimSpace(zist)
-				flis(zist)
+				abc1(zist)
 				zibx.SetText(zmsg)
 			}
 			if zbt2.Clicked(gtx) {
@@ -139,31 +207,16 @@ func render(w *app.Window) error {
 						}
 						return nil
 					})
-				for _, path := range strings.Split(zpat, ",") {
-					background, err := wallpaper.Get()
-					if err != nil {
-						fmt.Println(err)
-					}
-					fmt.Println("Current wallpaper:", background)
-					err = wallpaper.SetFromFile(path)
-					if err != nil {
-						fmt.Println(err)
-					}
-					err = wallpaper.SetMode(wallpaper.Crop)
-					if err != nil {
-						fmt.Println(err)
-						log.Fatal(err)
-					}
-				}
+				abc3(w2, zpat)
 			}
 			if zbt3.Clicked(gtx) {
 				fmt.Println("Sync")
 				zist := zibx.Text()
 				zist = strings.TrimSpace(zist)
 				zina := strings.Split(zist, "\n")
-				flis(zina[0])
+				abc1(zina[0])
 				zibx.SetText(zmsg)
-				flis(zina[1])
+				abc1(zina[1])
 				zibx.SetText(zmsg)
 				zcmd := exec.Command("ROBOCOPY", zina[0], zina[1], "/MIR")
 				out, err := zcmd.CombinedOutput()
