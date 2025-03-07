@@ -18,7 +18,7 @@ LISY is a Windows desktop app for listing, backing-up, and viewing a folder.
 ## How to:
 
 - Download lisy.exe from https://github.com/Lapyl/Lisy to your local folder. Alternatively, download lipy.exe.txt form https://lipy.us/docs/lisy.exe.txt to your local folder, and remove its .txt extension.
-- If you want, you can add a shortcut of your local lipy.exe file.
+- If you want, you can add a shortcut of your local lisy.exe file.
 - When needed, click lipy.exe (or its shortcut).
 - For listing contents of a folder, write the folder's path in the Source folder box, and click List button. It will add two csv files of lists, in the folder.
 - For backing up a folder A to another folder B, [carefully] write A's path in the Source folder box and B's path in the Backup folder box, and click Sync button.
